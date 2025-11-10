@@ -1,12 +1,16 @@
 import { test } from "@playwright/test";
-import { Application } from "../app";
-import { UserCreateRequest, UserCreatedResponse } from "../api/models";
+import fs from "fs";
 import { randomUUID } from "node:crypto";
+import path from "path";
+import { UserCreateRequest, UserCreatedResponse } from "../api/models";
+import { Application } from "../app";
+
+const STORAGE_STATE_PATH = path.join(__dirname, "../storage-state.json");
 
 export const baseFixture = test.extend<{ app: Application }>({
   app: async ({ page }, use) => {
-    const app = new Application(page);
-    await use(app);
+      const app = new Application(page);
+      await use(app);
   },
 });
 
@@ -29,15 +33,24 @@ export const loggedUserFixture = baseFixture.extend<
       option: true,
     },
   ],
-  app: async ({ app, defaultUser }, use) => {
-    await app.signIn.open();
-    await app.signIn.signIn(defaultUser);
-    await app.accountDetails.expectLoaded();
-    await app.home.header.openShop();
-
-    await use(app);
-    // Cleanup
-    console.log("Post fixture!", defaultUser);
+  app: async ({ app, browser, defaultUser }, use) => {
+    if (fs.existsSync(STORAGE_STATE_PATH)) {
+      await app._page.context().close();
+      const context = await browser.newContext({ storageState: STORAGE_STATE_PATH });
+      const page = await context.newPage();
+      const appWithStorage = new Application(page);
+      await appWithStorage.home.open();
+      await appWithStorage.home.header.openShop();
+      await use(appWithStorage);
+      await context.close();
+    } else {
+      await app.signIn.open();
+      await app.signIn.signIn(defaultUser);
+      await app.accountDetails.expectLoaded();
+      await app.home.header.openShop();
+      await app._page.context().storageState({ path: STORAGE_STATE_PATH });
+      await use(app);
+    }
   },
 });
 

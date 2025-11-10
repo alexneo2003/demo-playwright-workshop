@@ -3,6 +3,14 @@ import { step } from '../misc/reporters/step';
 
 export abstract class PageHolder { 
     constructor(protected page: Page) { }
+
+    get _page() {
+        return this.page;
+    }
+
+    set _page(page: Page) {
+        this.page = page;
+    }
 }
 export abstract class Component extends PageHolder {
     abstract expectLoaded(message?: string): Promise<void>;

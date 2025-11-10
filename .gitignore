@@ -128,3 +128,4 @@ dist
 /test-results/
 /playwright-report/
 /playwright/.cache/
+storage-state.json
