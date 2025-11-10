@@ -34,7 +34,7 @@ export default defineConfig<DefaultUserOption>({
     baseURL: 'https://shopdemo-alex-hot.koyeb.app',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: {
-      mode: 'on-first-retry'
+      mode: 'on'
     },
     headless: process.env.CI ? true : false,
   },

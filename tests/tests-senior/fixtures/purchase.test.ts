@@ -24,7 +24,7 @@ loggedUserFixture('fixt: logged in user can purchase multiple items', async ({ a
   // Item #2
   await app.product.header.openShop();
   await app.shop.openProductDetailsByName('MARINATED CUCUMBERS NEZHIN STYLE');
-  await app.product.addToBag();
+  await app.product.addToBag(false);
 
   await app.accountDetails.miniCart.placeOrder();
   await app.confirmation.expectOrderPlaced();

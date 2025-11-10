@@ -5,6 +5,7 @@ import { step } from "../../misc/reporters/step";
 export class MiniCart extends Component {
     private proceedToCheckoutButton = this.page.getByRole('button', { name: 'Proceed To Checkout' });
     private placeOrderButton = this.page.getByRole('button', { name: 'Place Order' });
+    private continueShoppingButton = this.page.getByRole('button', { name: 'Continue Shopping' });
 
     @step()
     async expectLoaded() {
@@ -19,5 +20,10 @@ export class MiniCart extends Component {
     @step()
     async placeOrder() {
         await this.placeOrderButton.click();
+    }
+
+    @step()
+    async continueShopping() {
+        await this.continueShoppingButton.click();
     }
 }

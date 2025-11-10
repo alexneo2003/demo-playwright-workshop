@@ -36,8 +36,12 @@ export class Product extends AppPage {
     }
 
     @step()
-    async addToBag() {
+    async addToBag(closeMiniCart = true) {
         await this.expectLoaded();
         await this.addToBagButton.click();
+        await this.miniCart.expectLoaded();
+        if (closeMiniCart) {
+            await this.miniCart.continueShopping();
+        }
     }
 }
